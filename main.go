@@ -26,13 +26,14 @@ func main() {
 	// Configure public folder
 	app.Static("/", "./public")
 
-	app.Use(func(c *fiber.Ctx) error {
-		return c.Status(fiber.StatusNotFound).SendString("Sorry can't find that!")
-	})
-
 	// Routing goes here
 	WebRoutes(app)
 	ApiRoutes(app)
+
+	// Return error if route not found
+	app.Use(func(c *fiber.Ctx) error {
+		return c.Status(fiber.StatusNotFound).SendString("Sorry can't find that!")
+	})
 
 	// Define port
 	app.Listen(":" + os.Getenv("PORT"))
